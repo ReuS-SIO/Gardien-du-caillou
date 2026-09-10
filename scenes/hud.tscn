@@ -1,0 +1,242 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/hud.gd" id="1_hud"]
+
+[sub_resource type="StyleBoxFlat" id="boss_fill"]
+bg_color = Color(0.6, 0.2, 0.9, 1)
+
+[sub_resource type="StyleBoxFlat" id="throw_fill"]
+bg_color = Color(0.95, 0.75, 0.3, 1)
+
+[node name="HUD" type="CanvasLayer"]
+process_mode = 3
+layer = 10
+script = ExtResource("1_hud")
+
+[node name="TopLeft" type="MarginContainer" parent="."]
+offset_left = 8.0
+offset_top = 6.0
+offset_right = 260.0
+offset_bottom = 70.0
+mouse_filter = 2
+
+[node name="VBox" type="VBoxContainer" parent="TopLeft"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="HPRow" type="HBoxContainer" parent="TopLeft/VBox"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="HPLabel" type="Label" parent="TopLeft/VBox/HPRow"]
+layout_mode = 2
+text = "PV 100/100"
+
+[node name="HPBar" type="ProgressBar" parent="TopLeft/VBox/HPRow"]
+custom_minimum_size = Vector2(150, 12)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+value = 100.0
+show_percentage = false
+
+[node name="ThrowRow" type="HBoxContainer" parent="TopLeft/VBox"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="ThrowLabel" type="Label" parent="TopLeft/VBox/ThrowRow"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "Javelot : prêt"
+
+[node name="ThrowBar" type="ProgressBar" parent="TopLeft/VBox/ThrowRow"]
+custom_minimum_size = Vector2(90, 8)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+theme_override_styles/fill = SubResource("throw_fill")
+value = 100.0
+show_percentage = false
+
+[node name="WaveLabel" type="Label" parent="TopLeft/VBox"]
+layout_mode = 2
+text = "Vague 1 / 5"
+
+[node name="BuffsLabel" type="Label" parent="TopLeft/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "Buffs : aucun"
+
+[node name="ZoneLabel" type="Label" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -380.0
+offset_top = 6.0
+offset_right = -8.0
+offset_bottom = 24.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 11
+text = "Zone"
+horizontal_alignment = 2
+
+[node name="Hint" type="Label" parent="."]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -18.0
+offset_right = 400.0
+offset_bottom = -4.0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.85, 0.85, 0.8, 0.8)
+theme_override_font_sizes/font_size = 9
+text = "Q/D ou ← → : se déplacer   Espace : sauter   J / clic gauche : lance   K / clic droit : javelot   Échap : pause"
+
+[node name="Message" type="Label" parent="."]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -70.0
+offset_right = 300.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.95, 0.75, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 22
+text = "Message"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BossBar" type="VBoxContainer" parent="."]
+visible = false
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -200.0
+offset_top = -52.0
+offset_right = 200.0
+offset_bottom = -22.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="BossName" type="Label" parent="BossBar"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.6, 1, 1)
+text = "Boss"
+horizontal_alignment = 1
+
+[node name="BossProgress" type="ProgressBar" parent="BossBar"]
+custom_minimum_size = Vector2(400, 10)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/fill = SubResource("boss_fill")
+value = 100.0
+show_percentage = false
+
+[node name="PausePanel" type="PanelContainer" parent="."]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="PausePanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="PauseTitle" type="Label" parent="PausePanel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "PAUSE"
+horizontal_alignment = 1
+
+[node name="ResumeButton" type="Button" parent="PausePanel/VBox"]
+layout_mode = 2
+text = "Reprendre"
+
+[node name="RestartButton" type="Button" parent="PausePanel/VBox"]
+layout_mode = 2
+text = "Recommencer la zone"
+
+[node name="QuitButton" type="Button" parent="PausePanel/VBox"]
+layout_mode = 2
+text = "Menu principal"
+
+[node name="UpgradePanel" type="PanelContainer" parent="."]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="UpgradePanel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="UpgradeTitle" type="Label" parent="UpgradePanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.4, 1)
+theme_override_font_sizes/font_size = 16
+text = "Boss vaincu ! Choisissez une amélioration permanente"
+horizontal_alignment = 1
+
+[node name="Choices" type="HBoxContainer" parent="UpgradePanel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="EndPanel" type="PanelContainer" parent="."]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="EndPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="EndTitle" type="Label" parent="EndPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 1, 0.5, 1)
+theme_override_font_sizes/font_size = 18
+text = "Zone sécurisée !"
+horizontal_alignment = 1
+
+[node name="EndText" type="Label" parent="EndPanel/VBox"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+text = "Texte"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="EndButtons" type="HBoxContainer" parent="EndPanel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="NextButton" type="Button" parent="EndPanel/VBox/EndButtons"]
+layout_mode = 2
+text = "Zone suivante"
+
+[node name="MenuButton" type="Button" parent="EndPanel/VBox/EndButtons"]
+layout_mode = 2
+text = "Choix des zones"
