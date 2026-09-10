@@ -48,6 +48,7 @@ func _ready() -> void:
 	hud.next_zone_pressed.connect(_on_next_zone)
 	hud.zone_menu_pressed.connect(_on_zone_menu)
 	hud.restart_pressed.connect(_on_restart)
+	Audio.play_music("zone_%d" % zone_index)
 	_intro()
 
 
@@ -222,6 +223,7 @@ func _start_wave(number: int) -> void:
 	spawn_timer = 0.6
 	hud.set_wave(number, WAVES)
 	hud.show_message("Vague %d" % number, 1.4)
+	Audio.play("wave_start", 0.0)
 
 
 ## Fait apparaître un mutant. Sans position, il arrive par un bord de la carte.
@@ -257,6 +259,7 @@ func _wave_cleared() -> void:
 	# petit répit : on récupère un quart de ses PV entre deux vagues
 	player.heal(int(player.max_hp * 0.25))
 	hud.show_message("Vague nettoyée !\n%s" % buff_text, 2.4)
+	Audio.play("wave_clear", 0.0)
 	await get_tree().create_timer(3.0).timeout
 	if state != "between":
 		return
@@ -306,6 +309,8 @@ func _start_boss() -> void:
 	boss.died.connect(_on_boss_died)
 	hud.show_boss(boss_data["name"], boss.max_hp)
 	hud.show_message("BOSS\n%s" % boss_data["name"], 2.5)
+	Audio.play("boss_appear", 0.0)
+	Audio.play_music("boss")
 
 
 func _on_boss_died(_boss: Enemy) -> void:
@@ -315,7 +320,11 @@ func _on_boss_died(_boss: Enemy) -> void:
 	_clear_enemies()
 	GameState.complete_zone(zone_index)
 	hud.show_message("Zone sécurisée !", 2.0)
-	await get_tree().create_timer(2.2).timeout
+	Audio.play("boss_die", 0.0)
+	Audio.stop_music()
+	await get_tree().create_timer(1.6).timeout
+	Audio.play("victory", 0.0)
+	await get_tree().create_timer(0.6).timeout
 	var choices := GameState.pick_upgrade_choices(3)
 	if choices.is_empty():
 		_show_end()
@@ -325,6 +334,7 @@ func _on_boss_died(_boss: Enemy) -> void:
 
 func _on_upgrade_chosen(id: String) -> void:
 	GameState.apply_upgrade(id)
+	Audio.play("upgrade", 0.0)
 	if is_instance_valid(player):
 		player.refresh_stats()
 	_show_end()
@@ -368,6 +378,7 @@ func _on_player_died() -> void:
 		if child is ToxicDrop or child is Javelin:
 			child.queue_free()
 	player.respawn(spawn_point)
+	Audio.play_music("zone_%d" % zone_index)
 	match previous:
 		"boss":
 			_start_boss()

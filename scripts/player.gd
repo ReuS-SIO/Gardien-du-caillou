@@ -65,6 +65,8 @@ func heal(amount: int) -> void:
 	hp_changed.emit(hp, max_hp)
 	if amount > 0:
 		Fx.float_text(get_parent(), global_position, "+%d" % amount, Color(0.5, 1.0, 0.5))
+		if amount >= 10:
+			Audio.play("heal", 0.0, -6.0)
 
 
 func _physics_process(delta: float) -> void:
@@ -104,9 +106,11 @@ func _physics_process(delta: float) -> void:
 	if jump_buffer > 0.0:
 		if coyote_timer > 0.0:
 			_jump()
+			Audio.play("jump")
 		elif air_jumps > 0:
 			air_jumps -= 1
 			_jump()
+			Audio.play("double_jump")
 			Fx.spark(get_parent(), global_position + Vector2(0, 28), 1.5)
 	if Input.is_action_just_released("jump") and velocity.y < 0.0:
 		velocity.y *= 0.5
@@ -116,6 +120,7 @@ func _physics_process(delta: float) -> void:
 		attack_timer = ATTACK_DURATION
 		attack_cooldown = GameState.get_attack_cooldown()
 		hit_enemies.clear()
+		Audio.play("attack", 0.1)
 	attack_area.scale.x = float(facing)
 	if attack_timer > 0.0:
 		_apply_attack()
@@ -155,6 +160,7 @@ func _throw() -> void:
 	javelin.damage = GameState.get_damage() * GameState.THROW_DAMAGE_MULT
 	javelin.owner_position = global_position
 	get_parent().add_child(javelin)
+	Audio.play("throw")
 
 
 func _update_animation(delta: float, dir: float) -> void:
@@ -195,6 +201,8 @@ func take_damage(amount: int, from_position: Vector2) -> void:
 	Fx.float_text(get_parent(), global_position, "-%d" % amount, Color(1.0, 0.4, 0.4))
 	if hp <= 0:
 		_die()
+	else:
+		Audio.play("player_hurt")
 
 
 func _die() -> void:
@@ -204,6 +212,7 @@ func _die() -> void:
 	var t := create_tween()
 	t.tween_property(sprite, "rotation", deg_to_rad(90.0 * facing), 0.4)
 	t.parallel().tween_property(sprite, "modulate", Color(0.6, 0.3, 0.6, 0.7), 0.4)
+	Audio.play("player_die", 0.0)
 	died.emit()
 
 
@@ -219,3 +228,4 @@ func respawn(at: Vector2) -> void:
 	throw_cooldown = 0.0
 	throw_cooldown_changed.emit(0.0, GameState.get_throw_cooldown())
 	hp_changed.emit(hp, max_hp)
+	Audio.play("respawn", 0.0)

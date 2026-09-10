@@ -31,6 +31,8 @@ func _ready() -> void:
 		zones_box.add_child(button)
 		buttons.append(button)
 	_refresh_stats()
+	Audio.hook_buttons(self)
+	Audio.play_music("menu")
 	var first := clampi(GameState.unlocked_zones - 1, 0, buttons.size() - 1)
 	_show_zone(first)
 	buttons[first].grab_focus()

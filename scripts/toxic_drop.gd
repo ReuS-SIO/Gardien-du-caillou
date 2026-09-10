@@ -39,4 +39,5 @@ func _on_body_entered(body: Node) -> void:
 	if body is Player:
 		body.take_damage(damage, global_position)
 	Fx.spark(get_parent(), global_position, 1.5)
+	Audio.play("splash", 0.15, -6.0)
 	queue_free()

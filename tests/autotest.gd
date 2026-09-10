@@ -154,4 +154,7 @@ func _log(text: String) -> void:
 
 func _finish(code: int) -> void:
 	_log("Terminé avec %d échec(s)" % failures)
+	Audio.stop_all()
+	# laisse au serveur audio le temps de libérer les lectures en cours avant de quitter
+	await get_tree().create_timer(0.2, true, false, true).timeout
 	get_tree().quit(code if failures == 0 else 1)

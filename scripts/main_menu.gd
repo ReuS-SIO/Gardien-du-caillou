@@ -13,6 +13,8 @@ func _ready() -> void:
 	$MenuPanel/VBox/QuitButton.pressed.connect(func() -> void: get_tree().quit())
 	$StoryPanel/VBox/CloseButton.pressed.connect(func() -> void: story_panel.visible = false)
 	_refresh_progress()
+	Audio.hook_buttons(self)
+	Audio.play_music("menu")
 	play_button.grab_focus()
 
 

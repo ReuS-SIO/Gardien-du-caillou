@@ -21,6 +21,7 @@ var damage: int = 10
 var flying := false
 var charger := false
 var is_dead := false
+var is_boss := false
 var half_height := 12.0
 var base_scale := 2.0
 
@@ -115,6 +116,7 @@ func _charge_logic(delta: float, to_target: Vector2) -> void:
 			if charge_cooldown <= 0.0 and absf(to_target.x) < 230.0 and absf(to_target.y) < 40.0 and is_on_floor():
 				charge_state = 1
 				charge_timer = 0.45
+				Audio.play("charge_windup", 0.1, -4.0)
 		1:
 			velocity.x = move_toward(velocity.x, 0.0, speed * 10.0 * delta)
 			sprite.modulate = Color(1.6, 1.0, 1.0)
@@ -184,6 +186,8 @@ func take_damage(amount: float, from_position: Vector2) -> void:
 	Fx.float_text(get_parent(), global_position, str(int(round(amount))), Color(1.0, 0.9, 0.4))
 	if hp <= 0.0:
 		_die()
+	else:
+		Audio.play("hit_enemy", 0.12)
 
 
 func _die() -> void:
@@ -191,6 +195,8 @@ func _die() -> void:
 		return
 	is_dead = true
 	GameState.total_kills += 1
+	if not is_boss:
+		Audio.play("enemy_die", 0.15)
 	died.emit(self)
 	hitbox.set_deferred("monitoring", false)
 	body_shape.set_deferred("disabled", true)

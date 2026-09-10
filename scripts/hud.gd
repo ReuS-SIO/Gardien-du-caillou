@@ -34,6 +34,7 @@ func _ready() -> void:
 	$PausePanel/VBox/QuitButton.pressed.connect(_on_quit)
 	next_button.pressed.connect(func() -> void: next_zone_pressed.emit())
 	$EndPanel/VBox/EndButtons/MenuButton.pressed.connect(func() -> void: zone_menu_pressed.emit())
+	Audio.hook_buttons(self)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -128,6 +129,7 @@ func show_upgrades(ids: Array) -> void:
 		button.alignment = HORIZONTAL_ALIGNMENT_CENTER
 		button.pressed.connect(_on_upgrade_pressed.bind(id))
 		choices.add_child(button)
+	Audio.hook_buttons(choices)
 	upgrade_panel.visible = true
 	get_tree().paused = true
 	if choices.get_child_count() > 0:
