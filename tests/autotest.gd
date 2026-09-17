@@ -12,6 +12,8 @@ var failures := 0
 
 func _ready() -> void:
 	shots_dir = OS.get_environment("GDC_SHOTS")
+	# sauvegarde séparée : le test ne doit jamais écraser la partie du joueur
+	GameState.save_path = "user://autotest_save.json"
 	GameState.clear_save()
 	GameState.current_zone = int(OS.get_environment("GDC_ZONE")) if OS.has_environment("GDC_ZONE") else 0
 	Engine.time_scale = 2.0
@@ -97,7 +99,7 @@ func _run() -> void:
 	_check(total_upgrades == 1, "amélioration permanente appliquée")
 	_check(GameState.is_zone_completed(GameState.current_zone), "zone marquée terminée")
 	_check(GameState.unlocked_zones == mini(GameState.current_zone + 2, GameState.ZONE_COUNT), "zone suivante débloquée (%d)" % GameState.unlocked_zones)
-	_check(FileAccess.file_exists(GameState.SAVE_PATH), "fichier de sauvegarde écrit")
+	_check(FileAccess.file_exists(GameState.save_path), "fichier de sauvegarde écrit")
 
 	# rechargement de la sauvegarde
 	var unlocked := GameState.unlocked_zones
@@ -154,4 +156,7 @@ func _log(text: String) -> void:
 
 func _finish(code: int) -> void:
 	_log("Terminé avec %d échec(s)" % failures)
+	Audio.stop_all()
+	# laisse au serveur audio le temps de libérer les lectures en cours avant de quitter
+	await get_tree().create_timer(0.2, true, false, true).timeout
 	get_tree().quit(code if failures == 0 else 1)

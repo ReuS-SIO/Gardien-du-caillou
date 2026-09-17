@@ -12,6 +12,10 @@ var acting := false
 var enraged := false
 
 
+func _ready() -> void:
+	is_boss = true
+
+
 func _physics_process(delta: float) -> void:
 	super(delta)
 	if is_dead or not is_instance_valid(target):
@@ -56,6 +60,7 @@ func _special_slam() -> void:
 	if not is_instance_valid(self) or is_dead:
 		return
 	Fx.spark(get_parent(), global_position + Vector2(0, half_height), 4.0)
+	Audio.play("slam", 0.05)
 	if is_instance_valid(target) and target is Player and target.is_on_floor():
 		if absf(target.global_position.x - global_position.x) < 130.0:
 			target.take_damage(damage, global_position)
@@ -96,6 +101,7 @@ func _special_spit() -> void:
 		var vx := to_target.x / flight_time + (i - count * 0.5 + 0.5) * 40.0
 		var vy := (to_target.y - 0.5 * 500.0 * flight_time * flight_time) / flight_time
 		_spawn_drop(Vector2(vx, vy))
+		Audio.play("spit", 0.15)
 		await get_tree().create_timer(0.12).timeout
 		if not is_instance_valid(self) or is_dead:
 			return
@@ -128,3 +134,4 @@ func take_damage(amount: float, from_position: Vector2) -> void:
 		speed *= 1.3
 		sprite.self_modulate = Color(1.3, 0.8, 1.2)
 		Fx.float_text(get_parent(), global_position + Vector2(0, -half_height), "ENRAGÉ !", Color(1.0, 0.4, 1.0))
+		Audio.play("boss_enraged", 0.0)

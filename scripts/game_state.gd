@@ -1,8 +1,11 @@
 extends Node
 ## Autoload "GameState" : progression, améliorations permanentes, buffs de zone, sauvegarde.
 
-const SAVE_PATH := "user://gardiens_save.json"
+const DEFAULT_SAVE_PATH := "user://gardiens_save.json"
 const ZONE_COUNT := 5
+
+## Chemin du fichier de sauvegarde (les tests automatiques le redirigent pour ne pas écraser la vraie partie).
+var save_path: String = DEFAULT_SAVE_PATH
 
 const BASE_HP := 100
 const BASE_DAMAGE := 25.0
@@ -123,7 +126,7 @@ func save_game() -> void:
 		"upgrades": upgrades,
 		"total_kills": total_kills,
 	}
-	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+	var file := FileAccess.open(save_path, FileAccess.WRITE)
 	if file == null:
 		push_warning("Impossible d'écrire la sauvegarde : %s" % FileAccess.get_open_error())
 		return
@@ -132,9 +135,9 @@ func save_game() -> void:
 
 
 func load_game() -> bool:
-	if not FileAccess.file_exists(SAVE_PATH):
+	if not FileAccess.file_exists(save_path):
 		return false
-	var file := FileAccess.open(SAVE_PATH, FileAccess.READ)
+	var file := FileAccess.open(save_path, FileAccess.READ)
 	if file == null:
 		return false
 	var parsed = JSON.parse_string(file.get_as_text())
@@ -157,12 +160,12 @@ func load_game() -> bool:
 
 
 func has_save() -> bool:
-	return FileAccess.file_exists(SAVE_PATH)
+	return FileAccess.file_exists(save_path)
 
 
 func clear_save() -> void:
-	if FileAccess.file_exists(SAVE_PATH):
-		DirAccess.remove_absolute(SAVE_PATH)
+	if FileAccess.file_exists(save_path):
+		DirAccess.remove_absolute(save_path)
 	unlocked_zones = 1
 	completed_zones = []
 	total_kills = 0

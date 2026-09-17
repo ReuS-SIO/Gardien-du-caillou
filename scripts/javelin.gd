@@ -67,4 +67,5 @@ func _stick() -> void:
 	stuck = true
 	life = 1.2
 	Fx.spark(get_parent(), global_position, 1.5)
+	Audio.play("javelin_stick", 0.1, -4.0)
 	set_deferred("monitoring", false)

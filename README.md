@@ -84,6 +84,22 @@ Le test enchaîne : intro, vague 1, dégâts et invulnérabilité, lancer de jav
 boss, mort et réapparition, victoire, choix d'amélioration, sauvegarde et rechargement.
 Avec `GDC_SHOTS=<dossier>` et sans `--headless`, il enregistre aussi des captures d'écran.
 
+## Audio (sons de substitution)
+
+Les sons actuels sont des **mock data** synthétisés en 8-bit par `tools/gen_audio.py`
+(`pip install numpy`, puis `python tools/gen_audio.py`). Ils sont dans `assets/audio/` :
+
+- `sfx/` : 24 effets (`jump`, `attack`, `throw`, `hit_enemy`, `enemy_die`, `player_hurt`,
+  `wave_clear`, `boss_appear`, `upgrade`, `ui_click`…) ;
+- `music/` : boucles `menu`, `zone_0` à `zone_4` (de plus en plus rapides et dissonantes
+  avec la contamination) et `boss`.
+
+Pour remplacer un son : dépose ton fichier **wav, ogg ou mp3** et change le chemin
+correspondant dans `scripts/audio_manager.gd` (tables `SFX` et `MUSIC`), ou garde exactement
+le même nom `.wav`. Les musiques bouclent automatiquement quel que soit le format.
+Les volumes se règlent dans le même fichier (`sfx_volume_db`, `music_volume_db`).
+Dans le code, un son se joue avec `Audio.play("nom")` et une musique avec `Audio.play_music("nom")`.
+
 ## Regénérer les sprites
 
 ```
